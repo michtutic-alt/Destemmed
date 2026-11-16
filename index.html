@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#24141d">
+<title>Destemmed | Wine Academy</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#fff5ec;background:#170e15}
+*{box-sizing:border-box}
+body{margin:0;padding-bottom:90px}
+header{background:#321b2a;padding:25px 20px;border-bottom:1px solid #765268}
+.logo{color:#e7c18e;letter-spacing:3px;font-size:25px;font-weight:800}
+.subtitle{font-size:12px;color:#d5bdc8;margin-top:5px}
+main{max-width:760px;margin:auto;padding:20px}
+h1{font-size:27px;margin:8px 0 12px}
+h2{font-size:20px;color:#e7c18e}
+p{line-height:1.6;color:#e4d7df}
+.card{background:#2d1b29;border:1px solid #64475a;border-radius:16px;padding:18px;margin:12px 0}
+button{font:inherit;cursor:pointer}
+.action{background:#e7c18e;color:#291521;border:0;border-radius:10px;padding:12px 16px;font-weight:700}
+.region{display:block;width:100%;text-align:left;background:#fff9f0!important;color:#24141d!important;border:2px solid #d6b990;border-radius:12px;padding:16px;margin:9px 0;font-weight:750}
+.region:focus-visible,.action:focus-visible{outline:3px solid #e7c18e;outline-offset:2px}
+.back{background:transparent;color:#e7c18e;border:1px solid #a77d91;border-radius:8px;padding:9px 14px}
+.small{font-size:13px;color:#d6bfc9}
+nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,1fr);background:#24141d;border-top:1px solid #715266;padding:9px 4px}
+nav button{background:transparent;border:0;color:#d9c7d0;padding:10px 2px;font-size:13px}
+nav button.active{color:#f1ca91;font-weight:800}
+.answer{width:100%;display:block;text-align:left;background:#3b2635;color:white;border:1px solid #78556a;border-radius:10px;padding:13px;margin:9px 0}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">DESTEMMED</div>
+<div class="subtitle">YOUR WINE EDUCATION COMPANION</div>
+</header>
+<main id="content"></main>
+<nav>
+<button onclick="show('home')" id="nav-home">⌂ Home</button>
+<button onclick="show('grapes')" id="nav-grapes">◈ Grapes</button>
+<button onclick="show('regions')" id="nav-regions">◎ Regions</button>
+<button onclick="show('quiz')" id="nav-quiz">✦ Quiz</button>
+</nav>
+<script>
+const el=document.getElementById('content');
+const directory={
+'Oceania':{'Australia':{'Victoria':['Yarra Valley','Mornington Peninsula','Geelong'],'South Australia':['Barossa Valley','McLaren Vale','Coonawarra'],'Western Australia':['Margaret River']},'New Zealand':{'North Island':['Hawke’s Bay','Martinborough'],'South Island':['Marlborough','Central Otago']}},
+'Europe':{'France':{'Burgundy':['Chablis AOC','Meursault AOC','Puligny-Montrachet AOC'],'Bordeaux':['Margaux AOC','Pauillac AOC','Saint-Émilion AOC'],'Champagne':['Champagne AOC']},'Italy':{'Piedmont':['Barolo DOCG','Barbaresco DOCG'],'Tuscany':['Chianti Classico DOCG','Brunello di Montalcino DOCG']},'Spain':{'Rioja':['Rioja DOCa'],'Ribera del Duero':['Ribera del Duero DO']},'Croatia':{'Istria':['Istria'],'Dalmatia':['Pelješac','Hvar']}},
+'North America':{'United States':{'California':['Napa Valley AVA','Sonoma Valley AVA'],'Oregon':['Willamette Valley AVA']}},
+'South America':{'Argentina':{'Mendoza':['Luján de Cuyo','Uco Valley']},'Chile':{'Central Valley':['Maipo Valley','Colchagua Valley']}},
+'Africa':{'South Africa':{'Western Cape':['Stellenbosch','Swartland','Walker Bay']}},
+'Asia':{'Japan':{'Yamanashi':['Koshu Valley']},'China':{'Ningxia':['Helan Mountain East']}}
+};
+const grapes={
+'Chardonnay':'A versatile white grape producing styles from crisp, citrus-driven wines to rich, oak-aged examples. Important regions include Burgundy, Champagne, the Yarra Valley and Margaret River.',
+'Pinot Noir':'Thin-skinned red grape associated with Burgundy, the Yarra Valley, Mornington Peninsula and Central Otago. Typically offers red fruit, floral and savoury aromas.',
+'Shiraz / Syrah':'Red grape associated with peppery, savoury styles in cooler climates and fuller-bodied, dark-fruited styles in warmer climates.',
+'Cabernet Sauvignon':'Structured red grape known for blackcurrant, firm tannins and ageing potential.',
+'Riesling':'Aromatic white grape with high acidity, producing dry through sweet styles.',
+'Nebbiolo':'High-acid, high-tannin red grape central to Barolo and Barbaresco.',
+'Sangiovese':'Italian red grape central to Chianti Classico and Brunello di Montalcino.',
+'Sauvignon Blanc':'Aromatic white grape known for citrus, herbal and tropical fruit expressions.',
+'Chenin Blanc':'High-acid white grape capable of dry, sparkling and sweet wines.',
+'Gamay':'Red grape associated with Beaujolais, often showing bright red fruit.'
+};
+const history=[
+['Before European settlement','The Wurundjeri people of the Kulin Nation have enduring connections to Yarra Valley Country.'],
+['1838','The first recorded vineyard in the Yarra Valley was established at Yering Station.'],
+['19th century','Vineyards and wineries expanded across the valley.'],
+['1889','Yarra Valley wines gained recognition at the Paris Exhibition.'],
+['Early 20th century','Commercial viticulture declined and largely ceased.'],
+['1963','Reg Egan planted vines at Wantirna Estate, marking the modern revival.'],
+['1973','Yarra Yering produced its first commercial vintage.'],
+['Today','The region is internationally recognised for Chardonnay, Pinot Noir and cool-climate wine styles.']
+];
+const questions=[
+{q:'Which white grape is central to Chablis?',a:['Chardonnay','Riesling','Chenin Blanc'],correct:0},
+{q:'Barolo DOCG is most closely associated with which grape?',a:['Nebbiolo','Pinot Noir','Shiraz'],correct:0},
+{q:'Which Australian state contains the Yarra Valley?',a:['Victoria','Tasmania','South Australia'],correct:0},
+{q:'Which grape is closely associated with Beaujolais?',a:['Gamay','Merlot','Sangiovese'],correct:0},
+{q:'Which country contains the Rioja wine region?',a:['Spain','Italy','France'],correct:0}
+];
+let screen='home',trail=[],qi=0,score=0,answered=false;
+let progress={};
+try{progress=JSON.parse(localStorage.getItem('destemmed-rebuild-v1')||'{}')}catch(e){}
+function save(){localStorage.setItem('destemmed-rebuild-v1',JSON.stringify(progress))}
+function show(page){
+screen=page;trail=[];
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById('nav-'+page).classList.add('active');
+render();
+}
+function card(title,body){return '<div class="card"><h2>'+title+'</h2><p>'+body+'</p></div>'}
+function render(){
+if(screen==='home'){
+el.innerHTML='<h1>Welcome to Destemmed</h1><p>Explore the world of wine, one lesson at a time.</p>'+card('Your wine journey','Learn grape varieties, explore regions and test your knowledge.')+card('Study progress','Quizzes completed: '+(progress.quizzes||0)+'<br>Best score: '+(progress.best||0)+' / '+questions.length)+ '<button class="action" onclick="show(\'grapes\')">Start learning</button>';
+}
+if(screen==='grapes'){
+el.innerHTML='<h1>Grape varieties</h1><p>Choose a grape to explore.</p>'+Object.keys(grapes).map((g,i)=>'<button class="region" onclick="openGrape('+i+')">'+g+' →</button>').join('');
+}
+if(screen==='regions')renderRegions();
+if(screen==='quiz')renderQuiz();
+}
+function openGrape(i){
+let name=Object.keys(grapes)[i];
+el.innerHTML='<button class="back" onclick="show(\'grapes\')">← Grapes</button><h1>'+name+'</h1>'+card('Overview',grapes[name])+(name==='Chardonnay'?card('Chardonnay Academy','Key themes: climate, acidity, malolactic fermentation, lees, oak, sparkling wine and regional expression.')+'<button class="action" onclick="openYarra()">Explore Yarra Valley →</button>':'');
+}
+function renderRegions(){
+let node=directory;
+for(let key of trail){if(node&&Object.prototype.hasOwnProperty.call(node,key))node=node[key];else break}
+let html='<h1>Wine regions</h1><p class="small">Continent → Country → Region → Appellation / GI</p>';
+if(trail.length)html+='<button class="back" onclick="goBack()">← Back</button><p class="small">'+trail.join(' → ')+'</p>';
+let items=Array.isArray(node)?node:Object.keys(node);
+html+=items.map((name,i)=>'<button class="region" onclick="chooseRegion('+i+')">'+name+' →</button>').join('');
+if(trail.includes('Yarra Valley'))html+=yarraProfile();
+el.innerHTML=html;
+}
+function chooseRegion(i){
+let node=directory;
+for(let key of trail)node=node[key];
+let items=Array.isArray(node)?node:Object.keys(node);
+let name=items[i];
+trail.push(name);
+if(name==='Yarra Valley'){el.innerHTML='<button class="back" onclick="goBack()">← Back</button>'+yarraProfile();return}
+if(Array.isArray(node)){el.innerHTML='<button class="back" onclick="goBack()">← Back</button>'+card(name,'Detailed educational profile coming soon.');return}
+renderRegions();
+}
+function goBack(){trail.pop();renderRegions()}
+function yarraProfile(){
+return '<h1>Yarra Valley</h1>'+card('Regional overview','Victoria, Australia. A cool to moderate climate wine region with varied elevations, soils and mesoclimates. Chardonnay and Pinot Noir are key varieties.')+'<h2>History timeline</h2>'+history.map(x=>card(x[0],x[1])).join('');
+}
+function openYarra(){screen='regions';trail=['Oceania','Australia','Victoria','Yarra Valley'];document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));document.getElementById('nav-regions').classList.add('active');el.innerHTML='<button class="back" onclick="goBack()">← Back</button>'+yarraProfile()}
+function renderQuiz(){
+let q=questions[qi];
+el.innerHTML='<h1>Wine quiz</h1><p class="small">Question '+(qi+1)+' of '+questions.length+' · Score '+score+'</p>'+card('Question',q.q)+q.a.map((a,i)=>'<button class="answer" onclick="answer('+i+')">'+a+'</button>').join('');
+answered=false;
+}
+function answer(i){
+if(answered)return;
+answered=true;
+if(i===questions[qi].correct)score++;
+el.innerHTML+='<div class="card"><h2>'+(i===questions[qi].correct?'Correct!':'Not quite')+'</h2><p>Correct answer: '+questions[qi].a[questions[qi].correct]+'</p><button class="action" onclick="nextQuestion()">Continue →</button></div>';
+}
+function nextQuestion(){
+qi++;
+if(qi>=questions.length){
+progress.quizzes=(progress.quizzes||0)+1;
+progress.best=Math.max(progress.best||0,score);
+save();
+el.innerHTML='<h1>Quiz complete!</h1>'+card('Your score',score+' / '+questions.length)+'<button class="action" onclick="restartQuiz()">Try again</button>';
+}else renderQuiz();
+}
+function restartQuiz(){qi=0;score=0;renderQuiz()}
+show('home');
+</script>
+</body>
+</html>
